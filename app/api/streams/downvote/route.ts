@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod"
 
-const UpvoteSchema = z.object({
+const DownVoteSchema = z.object({
     streamId: z.string()
 })
 export async function POST(req: NextRequest) {
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-        const data = UpvoteSchema.parse(await req.json())
+        const data = DownVoteSchema.parse(await req.json())
         await prisma.upvote.delete({
             where: {
                 userId_streamId: {
