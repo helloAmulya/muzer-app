@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
                 url: data.url,
                 extractedId,
                 type,
-                title: videoDetails.title,
+                title: videoDetails.title ?? "Can't find video",
                 smallImg: (thumbnails.length > 1 ? thumbnails[thumbnails.length - 2].url : thumbnails[thumbnails.length - 1].url) ?? "https://static.vecteezy.com/system/resources/previews/008/255/803/non_2x/page-not-found-error-404-system-updates-uploading-computing-operation-installation-programs-system-maintenance-a-hand-drawn-layout-template-of-a-broken-robot-illustration-vector.jpg",
                 bigImg: thumbnails[thumbnails.length - 1].url ?? "https://static.vecteezy.com/system/resources/previews/008/255/803/non_2x/page-not-found-error-404-system-updates-uploading-computing-operation-installation-programs-system-maintenance-a-hand-drawn-layout-template-of-a-broken-robot-illustration-vector.jpg",
             }

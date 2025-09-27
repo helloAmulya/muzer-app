@@ -1,0 +1,7 @@
+export * from "./navbar"
+export * from "./hero"
+export * from "./features"
+export * from "./how-it-works"
+export * from "./social-proof"
+export * from "./cta"
+export * from "./footer"
