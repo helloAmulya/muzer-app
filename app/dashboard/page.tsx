@@ -95,7 +95,6 @@ export default function Page() {
 
     function skipToNext() {
         setCurrent(null)
-        // immediately start top if available
         setTimeout(startTop, 0)
     }
 
