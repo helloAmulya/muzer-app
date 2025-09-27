@@ -18,11 +18,13 @@ const CURRENT_KEY = "fanqueue:current"
 
 const REFRESH_INTERVAL_MS = 10 * 1000;
 
-async function refreshStreams() {
+// async function refreshStreams() {
+//     const res = await axios.get(`/api/streams/my`, {
+//         withCredentials: true
+//     })
+//     console.log(res)
+// }
 
-    const res = await axios.get(`/api/streams/my`)
-    console.log(res)
-}
 
 function sortQueue(items: QueueItem[]) {
     return [...items].sort((a, b) => {
@@ -40,7 +42,6 @@ function normalize(item: QueueItem): QueueItem & { upVotes: number; downVotes: n
 }
 
 
-
 export default function Page() {
     const { data: queue, set: setQueue } = useLocalSWR<QueueItem[]>(QUEUE_KEY, [])
     const { data: current, set: setCurrent } = useLocalSWR<QueueItem | null>(CURRENT_KEY, null)
@@ -48,10 +49,16 @@ export default function Page() {
 
     const sortedQueue = React.useMemo(() => sortQueue(queue ?? []), [queue])
 
+    async function refreshStreams() {
+        const res = await fetch(`/api/streams/my`, {
+            credentials: "include"
+        })
+        console.log(res)
+    }
+
     useEffect(() => {
         refreshStreams();
         const interval = setInterval(() => {
-
         }, REFRESH_INTERVAL_MS);
     }, [])
 
@@ -69,22 +76,26 @@ export default function Page() {
         })
     }
 
-    function vote(id: string, delta: 1 | -1) {
-        setQueue((prev) =>
-            sortQueue(
-                prev.map((x) => {
-                    if (x.id !== id) return x
-                    const n = normalize(x)
-                    return {
-                        ...n,
-                        score: n.score + delta,
-                        upVotes: n.upVotes + (delta === 1 ? 1 : 0),
-                        downVotes: n.downVotes + (delta === -1 ? 1 : 0),
-                    }
-                }),
-            ),
-        )
+    function vote(id: string, isUpvote: boolean) {
+        setQueue(queue.map(video => video.id === id ? { ...video, upvotes: isUpvote ? video.upVotes + 1 : video.upvotes } : video).sort((a, b) => (b.upvotes) - (a.upvotes)))
     }
+
+    // function vote(id: string, delta: 1 | -1) {
+    //     setQueue((prev) =>
+    //         sortQueue(
+    //             prev.map((x) => {
+    //                 if (x.id !== id) return x
+    //                 const n = normalize(x)
+    //                 return {
+    //                     ...n,
+    //                     score: n.score + delta,
+    //                     upVotes: n.upVotes + (delta === 1 ? 1 : 0),
+    //                     downVotes: n.downVotes + (delta === -1 ? 1 : 0),
+    //                 }
+    //             }),
+    //         ),
+    //     )
+    // }
 
     function startTop() {
         if (sortedQueue.length === 0) return
