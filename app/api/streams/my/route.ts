@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
 
     const streams = await prisma.stream.findMany({
         where: {
-            userId: user.id ?? ""
+            userId: user. ?? ""
         }
     })
 
